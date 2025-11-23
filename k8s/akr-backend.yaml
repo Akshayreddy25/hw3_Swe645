@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akr-backend
+  namespace: akr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akr-backend
+  template:
+    metadata:
+      labels:
+        app: akr-backend
+    spec:
+      containers:
+        - name: api
+          image: 5715677660/akr-backend:hw3
+          imagePullPolicy: Always 
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: akr-mysql.akr.svc.cluster.local
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              value: akr
+            - name: DB_PASS
+              value: akrpass
+            - name: DB_NAME
+              value: akr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akr-backend
+  namespace: akr
+spec:
+  type: NodePort
+  selector:
+    app: akr-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      nodePort: 31101

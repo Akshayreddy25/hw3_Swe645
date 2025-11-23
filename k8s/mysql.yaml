@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akr-mysql
+  namespace: akr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akr-mysql
+  template:
+    metadata:
+      labels:
+        app: akr-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: rootpassword
+            - name: MYSQL_DATABASE
+              value: akr
+            - name: MYSQL_USER
+              value: akr
+            - name: MYSQL_PASSWORD
+              value: akrpass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akr-mysql
+  namespace: akr
+spec:
+  type: ClusterIP
+  selector:
+    app: akr-mysql
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306

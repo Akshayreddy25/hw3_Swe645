@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: akr-mysql-admin
+  namespace: akr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: akr-mysql-admin
+  template:
+    metadata:
+      labels:
+        app: akr-mysql-admin
+    spec:
+      containers:
+        - name: phpmyadmin
+          image: phpmyadmin/phpmyadmin:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PMA_HOST
+              value: akr-mysql.akr.svc.cluster.local
+            - name: PMA_PORT
+              value: "3306"
+            - name: PMA_USER
+              value: akr
+            - name: PMA_PASSWORD
+              value: akrpass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: akr-mysql-admin
+  namespace: akr
+spec:
+  type: NodePort
+  selector:
+    app: akr-mysql-admin
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30102
