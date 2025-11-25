@@ -6,7 +6,7 @@ pipeline {
 
         BACKEND_IMAGE   = "${DOCKERHUB_USER}/akr-backend:hw3"
         FRONTEND_IMAGE  = "${DOCKERHUB_USER}/akr-frontend:hw3"
-        KUBECONFIG_PATH = '/var/jenkins_home/rke2-jenkins.yaml'
+        KUBECONFIG_PATH = '/var/jenkins_home/.kube/config'
     }
 
     stages {
